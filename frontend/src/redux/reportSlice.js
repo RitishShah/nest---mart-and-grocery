@@ -4,7 +4,6 @@ import StatusCode from './StatusCode';
 
 const initialState = {
     status: StatusCode.IDLE,
-    data: null,
     error: null
 }
 
@@ -30,7 +29,6 @@ const reportSlice = createSlice({
                 state.error = action.payload.error.message;
             } else {
                 console.log(action.payload.data);
-                state.data = action.payload.data.message;
             }
 
             state.status = StatusCode.IDLE;

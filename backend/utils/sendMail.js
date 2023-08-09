@@ -1,9 +1,10 @@
 const nodeMailer = require("nodemailer");
-const dotenv = require('dotenv');
 
-dotenv.config({
+if(process.env.NODE_ENV !== "PRODUCTION") {
+  require("dotenv").config({
     path:"backend/config/.env"
-})
+  });
+}
 
 exports.sendMail = async (options) => {
     const transporter = nodeMailer.createTransport({

@@ -10,11 +10,6 @@ import PeopleIcon from "@material-ui/icons/People";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 
 const Sidebar = () => {
-  
-  const button = () =>{
-    // let items = document.querySelectorAll(".Dashboard__item");
-   
-}
 
   return (
     <div className="sidebar">
@@ -23,7 +18,7 @@ const Sidebar = () => {
         />
       </Link>
       <Link to="/dashboard">
-        <p className="Dashboard__item" onClick={button}>
+        <p className="Dashboard__item">
           <DashboardIcon /> Dashboard
         </p>
       </Link>

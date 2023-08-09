@@ -1,6 +1,5 @@
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -8,9 +7,12 @@ const utils = require('../utils/response');
 const jwtTokenCookie = require('../utils/jwtTokenCookie');
 const nodeMailer = require('../utils/sendMail');
 const cloudinary = require('cloudinary');
-dotenv.config({
-    path:"backend/config/.env"
-})
+
+if(process.env.NODE_ENV !== "PRODUCTION") {
+  require("dotenv").config({
+      path:"backend/config/.env"
+  });
+}
 
 // Sign Up User
 exports.createUser = async (req, res) => {
@@ -90,8 +92,15 @@ exports.loginUser = async (req, res) => {
       if (result) {
         const token = jwt.sign({ email: user[0].email, userid: user[0]._id }, process.env.JWT_KEY, { expiresIn: "24h" });
         const data = user[0];
+        console.log(data);
+        const userInfo = {
+          "name": data.name,
+          "email": data.email,
+          "role": data.role,
+          "createdAt": data.createdAt,
+        }
         jwtTokenCookie.sendToken(res,token);
-        return utils.response(res, 'success', "Auth Successful", data, 200);
+        return utils.response(res, 'success', "Auth Successful", userInfo, 200);
       } else {
         utils.response(res, 'fail', "Password not matching with database", null, 400);
       }
@@ -119,15 +128,16 @@ exports.forgetPassword = async (req, res) => {
     return utils.response(res, 'fail', "User Not Found", null, 404);
   }
 
-  const resetToken = crypto.randomBytes(20).toString("hex");
-  const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
-  const resetPasswordTime = Date.now() + (15 * 60 * 1000);
-  await User.updateOne({ email: email }, {$set : {resetPasswordToken: resetTokenHash, resetPasswordTime: resetPasswordTime}});
-
-  const resetPasswordLink = `${req.protocol}://${req.get('host')}/api/v2/password/reset/${resetToken}`;
-  const resetPasswordMessage = `Your Password Reset Link :- \n\n ${resetPasswordLink}`;
-
   try {
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
+    const resetPasswordTime = Date.now() + (15 * 60 * 1000);
+    await User.updateOne({ email: email }, {$set : {resetPasswordToken: resetTokenHash, resetPasswordTime: resetPasswordTime}});
+  
+    const resetPasswordLink = `${req.protocol}://${req.get('host')}/api/v2/password/reset/${resetToken}`;
+    console.log("reset password link", resetPasswordLink);
+    const resetPasswordMessage = `Your Password Reset Link :- \n\n ${resetPasswordLink}`;
+
     const options = { email: email, subject: "Ecommerce Password Recovery", message: resetPasswordMessage };
     await nodeMailer.sendMail(options);
     utils.response(res, 'success', `Email send successfully to ${email}`, options, 200);
@@ -178,7 +188,7 @@ exports.updatePassword = async (req, res) => {
       const update = await User.updateOne({email: user.email}, {$set: {password: newPassword}});
       utils.response(res, 'success', "Password Updated Successfully", update, 200);
     } else {
-      return utils.response(res, 'fail', "Old Password not matching with database", null, 400);
+      return utils.response(res, 'fail', ["Old Password not matching with database"], null, 400);
     }
   });
 }
@@ -239,7 +249,20 @@ exports.updateProfile = async (req, res) => {
 // Get All Users ---Admin
 exports.getAllUsers = async (req, res) => {
   const users = await User.find();
-  utils.response(res, 'success', "All Users", users, 200);
+  let usersData = [];
+
+  for(let i=0;i<users.length;i++) {
+    const user = users[i];
+    let data = {
+      "avatar": user.avatar,
+      "email": user.email,
+      "name": user.name,
+      "role": user.role,
+      "_id": user._id
+    }
+    usersData.push(data);
+  }
+  utils.response(res, 'success', "All Users", usersData, 200);
 }
 
 // Get Single User ---Admin

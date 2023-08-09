@@ -4,9 +4,7 @@ import StatusCode from './StatusCode';
 
 const initialState = {
     status: StatusCode.IDLE,
-    deletedOrderData: null,
     error: null,
-    isOrderDeleted: false,
 }
 
 const deleteOrderSlice = createSlice({
@@ -14,11 +12,6 @@ const deleteOrderSlice = createSlice({
     initialState,
     // Handle synchronous operations.
     reducers: {
-        resetDeleteOrder: (state) => {
-            state.deletedOrderData =  null;
-            state.error = null;
-            state.isOrderDeleted = false;
-        }
     },
 
     // Handle asynchronous operations.
@@ -35,8 +28,6 @@ const deleteOrderSlice = createSlice({
                 state.error = action.payload.error.message;
             } else {
                 console.log(action.payload.data);
-                state.deletedOrderData = action.payload.data.data;
-                state.isOrderDeleted = true;
             }
 
             state.status = StatusCode.IDLE;
@@ -47,7 +38,7 @@ const deleteOrderSlice = createSlice({
     }
 });
 
-export const { resetDeleteOrder } = deleteOrderSlice.actions;
+// export const {  } = deleteOrderSlice.actions;
 export default deleteOrderSlice.reducer;
 
 export const deleteOrderDetails = createAsyncThunk('deleteOrder/delete', async (id) => {

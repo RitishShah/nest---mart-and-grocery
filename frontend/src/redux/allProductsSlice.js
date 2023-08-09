@@ -2,12 +2,23 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const allProductsData = localStorage.getItem("allProductsList") !== null ? JSON.parse(localStorage.getItem("allProductsList")) : [];
+const isAllProductsReceived = localStorage.getItem("isAllProductsReceived") !== null ? JSON.parse(localStorage.getItem("isAllProductsReceived")) : false;
+const totalProducts = localStorage.getItem("totalProducts") !== null ? JSON.parse(localStorage.getItem("totalProducts")) : 0;
+
+const setCartListFunc = (allProductsData, isAllProductsReceived, totalProducts) => {
+    localStorage.setItem("allProductsList", JSON.stringify(allProductsData));
+    localStorage.setItem("isAllProductsReceived", JSON.stringify(isAllProductsReceived));
+    localStorage.setItem("totalProducts", JSON.stringify(totalProducts));
+};
+
 const initialState = {
-    data: null,
+    data: allProductsData,
     status: StatusCode.IDLE,
-    count: 0,
+    count: totalProducts,
     resultPerPage: 8,
-    isAllProductsFetched: false
+    isAllProductsFetched: isAllProductsReceived,
+    error: null
 }
 
 const allProductSlice = createSlice({
@@ -33,6 +44,12 @@ const allProductSlice = createSlice({
                 state.count = state.data.length;
                 state.isAllProductsFetched = true;
                 console.log(state.data);
+
+                setCartListFunc(
+                    state.data.map((item) => item),
+                    state.isAllProductsFetched,
+                    state.count
+                );
             }
             state.status = StatusCode.IDLE;
         })

@@ -87,7 +87,7 @@ exports.updateProductValidation = (req, res, next) => {
         }
     }
 
-    if(body.discountPrice && body.discountPrice.length > 4) {
+    if(body.offerPrice && body.offerPrice.length > 4) {
         errorMsg.push("Discount Price can't exceeds 4 characters");
     }
 

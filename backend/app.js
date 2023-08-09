@@ -1,12 +1,9 @@
 const express = require('express');
 const app = express();
-// const cors = require('cors');
 const cookieParser = require('cookie-parser');
-// const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const path = require("path");
 
-// app.use(cors);
-// app.use(express.json());
 app.use(cookieParser());
 // app.use(bodyParser.json({ limit: "50mb" }))
 // app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -19,6 +16,8 @@ const user = require('./routes/userRoutes');
 const product = require('./routes/productRoutes');
 const order = require('./routes/orderRoutes');
 const payment = require('./routes/paymentRoutes');
+const cart = require('./routes/cartRoutes');
+const favourite = require('./routes/favouriteRoutes');
 const report = require('./utils/report');
 
 app.use((req, res, next) => {
@@ -35,6 +34,15 @@ app.use('/api/v2', user);
 app.use('/api/v2', product);
 app.use('/api/v2', order);
 app.use('/api/v2', payment);
+app.use('/api/v2', cart);
+app.use('/api/v2', favourite);
 app.use('/api/v2', report);
+
+// So, this allows us to use frontend in our backend server.
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+});
+
 
 module.exports = app;

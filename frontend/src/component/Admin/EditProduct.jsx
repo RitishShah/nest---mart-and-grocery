@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./CreateProduct.css";
 import { useSelector, useDispatch } from "react-redux";
-// import { clearErrors, updateProduct, getProductDetails } from "../../actions/ProductActions";
 import { Button } from "@material-ui/core";
 import MetaData from "../../more/MetaData";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
@@ -12,20 +11,17 @@ import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
     // eslint-disable-next-line
 import DiscountIcon from "@material-ui/icons/LocalOffer";
 import SideBar from "./Sidebar";
-// import { UPDATE_PRODUCT_RESET } from "../../constans/ProductConstans";
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router-dom";
-import { getSingleProductDetails } from "../../redux/singleProductDetailSlice";
-import { resetUpdateProduct, updateProductDetails } from "../../redux/updateProductSlice";
+import { clearSingleProductDetailError, getSingleProductDetails } from "../../redux/singleProductDetailSlice";
+import { updateProductDetails } from "../../redux/updateProductSlice";
 import { getAllProducts } from "../../redux/allProductsSlice";
 
 const UpdateProduct = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
 
-  // const { error, product } = useSelector((state) => state.productDetails);
-  const { data: product } = useSelector(state => state.singleProductDetail);
-  const { error: updateError, isUpdated } = useSelector((state) => state.updateProduct);
+  const { data: product, error } = useSelector(state => state.singleProductDetail);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -55,43 +51,33 @@ const UpdateProduct = () => {
       setStock(product.stock);
       setOldImages(product.images);
     }
-    // if (error) {
-    //   toast.error(error);
-    //   dispatch(clearErrors());
-    // }
-
-    if (updateError) {
-      toast.error(updateError);
-      // dispatch(clearErrors());
+    if (error) {
+      toast.error(error);
+      dispatch(clearSingleProductDetailError());
     }
 
-    if (isUpdated) {
-      toast.success("Product Updated Successfully");
-      history("/admin/products");
-      dispatch(resetUpdateProduct());
-      dispatch(getAllProducts());
-    }
-  }, [dispatch, history, isUpdated, productId, product, updateError ]);
+  }, [dispatch, history, productId, product, error ]);
   // Product dependancy is triggering the useEffect
 
   const updateProductSubmitHandler  = (e) => {
     e.preventDefault();
-    // const myForm = new FormData();
-
-    // myForm.set("name", name);
-    // myForm.set("price", price);
-    // myForm.set("offerPrice", offerPrice);
-    // myForm.set("description", description);
-    // myForm.set("category", category);
-    // myForm.set("Stock", stock);
 
     const data = { "name": name, "price": price, "offerPrice": offerPrice, "description": description, "category": category, "stock": stock, "images": images };
 
-    // images.forEach((image) => {
-    //   myForm.append("images", image);
-    // });
+    dispatch(updateProductDetails({ id: productId, data: data })).then((response) => {
+      console.log("UPdate product response payload", response);
 
-    dispatch(updateProductDetails({ id: productId, data: data }));
+      const keys = Object.keys(response.payload);
+      if(keys.includes("error")) {
+        toast.error(response.payload.error.message[0]);
+      } else {
+        toast.success("Product Updated Successfully");
+        history("/admin/products");
+        // Inorder to reflect changes to Single Order. So that next time when user click Edit product then updated info will shown up.
+        dispatch(getSingleProductDetails(productId));
+        dispatch(getAllProducts());
+      }
+    })
   };
 
   const updateProductImagesChange = (e) => {

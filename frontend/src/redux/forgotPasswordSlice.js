@@ -3,7 +3,6 @@ import axios from "axios";
 import StatusCode from './StatusCode';
 
 const initialState = {
-    forgotPasswordData: null,
     status: StatusCode.IDLE,
     error: null
 }
@@ -29,7 +28,7 @@ const forgotPasswordSlice = createSlice({
                 console.log(action.payload.error);
                 state.error = action.payload.error;
             } else {
-                state.forgotPasswordData = action.payload;
+                console.log(action.payload);
             }
             state.status = StatusCode.IDLE;
         })

@@ -16,6 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRef } from "react";
 import { toast } from 'react-toastify';
 import { login } from "../redux/loginSlice";
+import { cartItemslocalStorageToDatabaseDetails, emptyLocalStorageCartItems } from "../redux/localStorageToDatabaseSlice";
+import { resetAddItemToCart } from "../redux/addItemToCartSlice";
+import { resetAddItemToFavourite } from "../redux/addItemToFavouriteSlice";
+import { emptyLocalStorageFavouriteItems, favouriteItemslocalStorageToDatabaseDetails } from "../redux/favouriteLocalStorageToDatabaseSlice";
+import axios from "axios";
 
 const UserData = ({ user }) => {
   const { totalQuantity: cartItems } = useSelector((state) => state.addItemToCart);
@@ -23,31 +28,8 @@ const UserData = ({ user }) => {
 
   const [open, setOpen] = useState(false);
   const history = useNavigate();
-
   console.log("Useeer", user);
-  
   const scroolEffect = useRef(null);
-
-  // window.addEventListener("scroll", () =>{
-  //   if(window.pageYOffset > 100){
-  //       document?.querySelector(".speedDial").classList.add("active");
-  //   }
-  //   else{
-  //     document?.querySelector(".speedDial").classList.remove("active");
-  //   }
-  // })
-
-  // window.addEventListener("scroll", () => {
-  //   const speedDial = document?.querySelector(".speedDial");
-  
-  //   if (speedDial) {
-  //     if (window.pageYOffset > 100) {
-  //       speedDial.classList.add("active");
-  //     } else {
-  //       speedDial.classList.remove("active");
-  //     }
-  //   }
-  // });
 
   window.addEventListener("scroll", () => {
     const speedDial = document.querySelector(".speedDial");
@@ -60,8 +42,6 @@ const UserData = ({ user }) => {
       }
     }
   });
-  
-  
 
   const dispatch = useDispatch();
 
@@ -95,23 +75,6 @@ const UserData = ({ user }) => {
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
 
-  // if (user.role === "admin") {
-  //   console.log("Dashboard");
-  //   options.unshift({
-  //     icon: <DashboardIcon />,
-  //     name: "Dashboard",
-  //     func: dashboard,
-  //   });
-  // }
-  // if (user.role === "Creator") {
-  //   console.log("Dashboard dont");
-  //   options.shift({
-  //     icon: <DashboardIcon />,
-  //     name: "Dashboard",
-  //     func: dashboard,
-  //   });
-  // }
-
   function dashboard() {
     history("/dashboard");
   }
@@ -119,7 +82,7 @@ const UserData = ({ user }) => {
     history("/");
   }
   function orders() {
-    history("/orders");
+    history("/me/orders");
   }
   function cart() {
     history("/cart");
@@ -136,8 +99,33 @@ const UserData = ({ user }) => {
   }
 
   function logoutUser() {
-    dispatch(login());
-    toast.success("Logout Successfully");
+    const cartItems = localStorage.getItem("cartList") !== null ? JSON.parse(localStorage.getItem("cartList")) : [];
+    const data = { "cartItems": cartItems };
+    const favouriteItems = localStorage.getItem("favouriteList") !== null ? JSON.parse(localStorage.getItem("favouriteList")) : [];
+    const data2 = { "favouriteItems": favouriteItems };
+
+    dispatch(cartItemslocalStorageToDatabaseDetails(data)).then((response) => {
+      const keys = Object.keys(response.payload);
+      if(keys.includes("error")) {
+        toast.error(response.payload.error);
+      } else {
+        dispatch(emptyLocalStorageCartItems());
+        dispatch(resetAddItemToCart());
+        dispatch(favouriteItemslocalStorageToDatabaseDetails(data2)).then((response) => {
+          const keys = Object.keys(response.payload);
+          if(keys.includes("error")) {
+            toast.error(response.payload.error);
+          } else {
+            axios.get('/api/v2/logout').then((response) => {
+              dispatch(emptyLocalStorageFavouriteItems());
+              dispatch(resetAddItemToFavourite());
+              dispatch(login());
+              toast.success("Logout Successfully");
+            })
+          }
+        })
+      }
+    });
   }
 
   return (
@@ -174,17 +162,6 @@ const UserData = ({ user }) => {
           />
         ))}
       </SpeedDial>
-      {/* <ToastContainer 
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        /> */}
     </>
   );
 };

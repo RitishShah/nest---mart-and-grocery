@@ -1,9 +1,7 @@
-// import React,{useState,useEffect} from 'react';
 import { Link} from 'react-router-dom';
 import "./FavouriteItemsCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProductInFavourite } from '../../redux/addItemToFavouriteSlice';
-// import ProductCard from '../Product/ProductCard';
 
 const FavouriteItemsCard = ({ item }) => {
     console.log("ITEMS", item);
@@ -30,11 +28,7 @@ const FavouriteItemsCard = ({ item }) => {
         </div>
 
         <div>
-        <p style={{ paddingBottom: ".5vmax" }}>
-              <b className={product.stock < 1 ? "redColor" : "greenColor"}>
-                {product.Stock < 1 ? "OutOfStock" : "InStock"}
-              </b>
-            </p>
+            <p style={{ paddingBottom: ".5vmax" }}><b className={product.stock < 1 ? "redColor" : "greenColor"}>{product.Stock < 1 ? "OutOfStock" : "InStock"}</b></p>
         </div>
         
         <div>

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import MetaData from './MetaData';
 import "./Support.css";
-// import emailjs from "@emailjs/browser";
 import BottomTab from './BottomTab.jsx';
 import { toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { reportDetails } from '../redux/reportSlice';
@@ -39,17 +37,10 @@ const Support = () => {
             const keys = Object.keys(response.payload);
             if(keys.includes("error")) {
                 console.log("payload", response);
-                toast.error(response.payload.error.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 5000,
-                });
+                toast.error(response.payload.error.message);
             }
             else {
-                toast.success(response.payload.data.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 5000,
-                });
-                // toast.success(response.payload.data.message);
+                toast.success(response.payload.data.message);
                 console.log("Sent Successfully");
                 history('/support');
             }
@@ -57,18 +48,14 @@ const Support = () => {
             .catch((error) => {
             // Handle login error
             console.log('Report error:', error);
-            toast.error(error.message, {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 5000,
-            });
+            toast.error(error.message);
             return;
         });
-        // setIsRendered(true);
     }
 
-    if(!isRendered && status === StatusCode.LOADING) {
+    if(!isRendered || status === StatusCode.LOADING) {
         return <p>Loading...</p>
-      }
+    }
   
     if(status === StatusCode.ERROR) {
         return <p>Something went wrong! try again later</p>
@@ -170,7 +157,6 @@ const Support = () => {
            </div>
        </div>
        <BottomTab />
-       {/* <ToastContainer/> */}
        </>
     )
 }

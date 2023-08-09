@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react";
 import "./CreateProduct.css";
 import { useSelector, useDispatch } from "react-redux";
-// import { clearErrors, createProduct } from "../../actions/ProductActions";
 import { Button } from "@material-ui/core";
 import MetaData from "../../more/MetaData";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
@@ -42,35 +41,9 @@ const CreateProduct = () => {
     "Others"
   ];
 
-  // useEffect(() => {
-  //   if (error) {
-  //     toast.error(error);
-  //   //   dispatch(clearErrors());
-  //   }
-
-  //   if (success) {
-  //     toast.success("Product Created Successfully");
-  //     history("/dashboard");
-  //   //   dispatch({ type: NEW_PRODUCT_RESET });
-  //   }
-  // }, [error, history, success]);
-
   const createProductSubmitHandler = (e) => {
     e.preventDefault();
     console.log("INside creaete");
-
-    // const myForm = new FormData();
-
-    // myForm.set("name", name);
-    // myForm.set("price", price);
-    // myForm.set("offerPrice", offerPrice);
-    // myForm.set("description", description);
-    // myForm.set("category", category);
-    // myForm.set("stock", stock);
-
-    // images.forEach((image) => {
-    //   myForm.append("images", image);
-    // });
 
     const data = {
         "name": name,
@@ -89,7 +62,7 @@ const CreateProduct = () => {
       const keys = Object.keys(response.payload);
       if(keys.includes("error")) {
         console.log("payload", response);
-        toast.error(response.payload.error);
+        toast.error(response.payload.error.message[0]);
       }
       else {
         toast.success("Product Created Successfully.");
@@ -137,41 +110,21 @@ const CreateProduct = () => {
       <div className="dashboard">
         <SideBar />
         <div className="newProductContainer">
-          <form
-            className="createProductForm"
-            encType="multipart/form-data"
-            onSubmit={createProductSubmitHandler}
-          >
+          <form className="createProductForm" encType="multipart/form-data" onSubmit={createProductSubmitHandler}>
             <h1>Create Product</h1>
-
             <div>
               <SpellcheckIcon />
-              <input
-                type="text"
-                placeholder="Product Name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+              <input type="text" placeholder="Product Name" required value={name} onChange={(e) => setName(e.target.value)}/>
             </div>
             
             <div>
               <DiscountIcon />
-              <input
-                type="String"
-                placeholder="Discount Percent (optional)"
-                onChange={(e) => setOfferPrice(e.target.value)}
-              />
+              <input type="String" placeholder="Discount Percent (optional)" onChange={(e) => setOfferPrice(e.target.value)}/>
             </div>
 
             <div>
               <AttachMoneyIcon />
-              <input
-                type="number"
-                placeholder="Product Price"
-                required
-                onChange={(e) => setPrice(e.target.value)}
-              />
+              <input type="number" placeholder="Product Price" required onChange={(e) => setPrice(e.target.value)}/>
             </div>
 
             <div>
@@ -195,22 +148,11 @@ const CreateProduct = () => {
 
             <div>
               <StorageIcon />
-              <input
-                type="number"
-                placeholder="Stock"
-                required
-                onChange={(e) => setStock(e.target.value)}
-              />
+              <input type="number" placeholder="Stock" required onChange={(e) => setStock(e.target.value)} />
             </div>
 
             <div id="createProductFormFile">
-              <input
-                type="file"
-                name="avatar"
-                accept="image/*"
-                onChange={createProductImagesChange}
-                multiple
-              />
+              <input type="file" name="avatar" accept="image/*" onChange={createProductImagesChange} multiple/>
             </div>
 
             <div id="createProductFormImage">
@@ -219,11 +161,7 @@ const CreateProduct = () => {
               ))}
             </div>
 
-            <Button
-              id="createProductBtn"
-              type="submit"
-              // disabled={status === StatusCode.IDLE ? true : false}
-            >
+            <Button id="createProductBtn" type="submit">
               Create
             </Button>
           </form>

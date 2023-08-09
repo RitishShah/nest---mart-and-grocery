@@ -2,11 +2,21 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const allOrdersData = localStorage.getItem("allOrdersList") !== null ? JSON.parse(localStorage.getItem("allOrdersList")) : [];
+const isAllOrdersReceived = localStorage.getItem("isAllOrdersReceived") !== null ? JSON.parse(localStorage.getItem("isAllOrdersReceived")) : false;
+const totalOrders = localStorage.getItem("totalOrders") !== null ? JSON.parse(localStorage.getItem("totalOrders")) : 0;
+
+const setCartListFunc = (allOrdersData, isAllOrdersReceived, totalOrders) => {
+    localStorage.setItem("allOrdersList", JSON.stringify(allOrdersData));
+    localStorage.setItem("isAllOrdersReceived", JSON.stringify(isAllOrdersReceived));
+    localStorage.setItem("totalOrders", JSON.stringify(totalOrders));
+};
+
 const initialState = {
-    allOrdersData: [],
-    isAllOrdersReceived: false,
+    allOrdersData: allOrdersData,
+    isAllOrdersReceived: isAllOrdersReceived,
     status: StatusCode.IDLE,
-    count: 0,
+    count: totalOrders,
 }
 
 const allOrderSlice = createSlice({
@@ -29,6 +39,12 @@ const allOrderSlice = createSlice({
             state.count = state.allOrdersData.length;
             state.isAllOrdersReceived = true;
             console.log(state.allOrdersData);
+
+            setCartListFunc(
+                state.allOrdersData.map((item) => item),
+                state.isAllOrdersReceived,
+                state.count
+            );
         })
         .addCase(getAllOrders.rejected, (state, action) => {
             state.status = StatusCode.ERROR;

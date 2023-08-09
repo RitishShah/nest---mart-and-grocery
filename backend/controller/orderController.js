@@ -8,16 +8,6 @@ exports.createOrder = async (req, res) => {
     // const { shippingInfo, orderItems, paymentInfo, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
     const { itemsPrice, orderItems, paymentInfo, shippingInfo, shippingPrice, totalPrice } = req.body;
     taxPrice = 0;
-    // const shipping = {
-    //     address: shippingInfo.address,
-    //     country: shippingInfo.country,
-    //     state: shippingInfo.state,
-    //     phone: shippingInfo.phone
-    // }
-
-    // for(let i=0;i<orderItems.length;i++) {
-
-    // }
   
     const order = await Order.create({
         _id: new mongoose.Types.ObjectId(),

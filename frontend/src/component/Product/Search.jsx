@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from "react";
-// import BottomTab from "../../more/BottomTab";
 import MetaData from "../../more/MetaData";
 import "./Search.css";
 import { useNavigate } from "react-router-dom";

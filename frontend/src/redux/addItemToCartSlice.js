@@ -6,7 +6,6 @@ const items = localStorage.getItem("cartList") !== null ? JSON.parse(localStorag
 const totalQuantity = localStorage.getItem("cartQuantity") !== null ? JSON.parse(localStorage.getItem("cartQuantity")) : 0;
 const totalAmount = localStorage.getItem("cartTotal") !== null ? JSON.parse(localStorage.getItem("cartTotal")) : 0;
 
-
 // adding this function to prevent repear code 
 const setCartListFunc = (items, totalAmount, totalQuantity) => {
     localStorage.setItem("cartList", JSON.stringify(items));
@@ -18,7 +17,9 @@ const initialState = {
     items: items,
     totalQuantity: totalQuantity,
     totalAmount: totalAmount,
-    status: StatusCode.IDLE
+    status: StatusCode.IDLE,
+    error: null,
+    databaseProductsData: null,
 }
 
 const addItemToCartSlice = createSlice({
@@ -32,8 +33,23 @@ const addItemToCartSlice = createSlice({
 
             console.log("add item cart", action.payload);
             console.log("newItem",newItem._id);
+            console.log("state items", state.items);
+
+            if(!state.items) {
+                localStorage.setItem("cartList", JSON.stringify(state.items));
+                localStorage.setItem("cartTotal", JSON.stringify(state.totalAmount));
+                localStorage.setItem("cartQuantity", JSON.stringify(state.totalQuantity));  
+                
+                setCartListFunc(
+                    [],
+                    state.totalAmount,
+                    state.totalQuantity
+                );
+
+                state.items = [];
+            }
         
-            const existingItem = state.items.find((item) => item._id === newItem._id);
+            const existingItem = state.items ? state.items.find((item) => item._id === newItem._id) : null;
         
             if (!existingItem) {
                 state.totalQuantity++;
@@ -107,43 +123,104 @@ const addItemToCartSlice = createSlice({
                 state.totalAmount,
                 state.totalQuantity
             );
-        }
+        },
 
+        resetAddItemToCart: (state) => {
+            state.items = null;
+            state.totalQuantity = 0;
+            state.totalAmount = 0;
+        },
+
+        addCartProductsToLocalStorage: (state) => {
+
+            if(!state.items) {
+                localStorage.setItem("cartList", JSON.stringify(state.items));
+                localStorage.setItem("cartTotal", JSON.stringify(state.totalAmount));
+                localStorage.setItem("cartQuantity", JSON.stringify(state.totalQuantity));
+
+                setCartListFunc(
+                    [],
+                    state.totalAmount,
+                    state.totalQuantity
+                );
+
+                state.items = [];
+            }
+
+            state.databaseProductsData.forEach(element => {
+                const isPresent = state.items ? state.items.find((ele) => ele._id === element._id) : null;
+                if(isPresent) {
+                    isPresent.quantity = isPresent.quantity + element.quantity;
+                    isPresent.totalPrice = isPresent.totalPrice + element.totalPrice;
+                } else {
+                    console.log("state db to ls", state.items);
+                    state.items.push({
+                        _id: element._id,
+                        price: element.price,
+                        quantity: element.quantity,
+                        totalPrice: element.price,
+                        name: element.name,
+                        images: element.images,
+                        category: element.category,
+                        stock: element.stock
+                    });
+                    state.totalQuantity++;
+                }
+            });
+
+            state.totalAmount = state.items.reduce((total, items) => total + Number(items.price) * Number(items.quantity), 0);
+            setCartListFunc( state.items.map((item) => item), state.totalAmount, state.totalQuantity);
+        },
+
+        emptyLocalStorageCartItemsAfterPaymentDone: (state) => {
+            localStorage.removeItem('cartList');
+            localStorage.removeItem('cartTotal');
+            localStorage.removeItem('cartQuantity');
+        }
     },
 
     // Handle asynchronous operations.
     extraReducers: (builder) => {
         builder
-        .addCase(addItemToCartDetails.pending, (state, action) => {
+        .addCase(cartDatabaseToLocalStorageDetails.pending, (state, action) => {
             state.status = StatusCode.LOADING;
         })
-        .addCase(addItemToCartDetails.fulfilled, (state, action) => {
-            console.log(action.payload);
-            state.data = action.payload.data.data.data;
+        .addCase(cartDatabaseToLocalStorageDetails.fulfilled, (state, action) => {
+            console.log("Review Promise", action.payload);
+            const keys = Object.keys(action.payload);
+            if(keys.includes("error")) {
+                console.log("error Report", action.payload);
+                state.error = action.payload.error.message;
+            } else {
+                console.log(action.payload.data);
+                state.databaseProductsData = action.payload.data.data;
+                console.log("state", state.databaseProductsData);
+                // state.isOrderDeleted = true;
+            }
+
             state.status = StatusCode.IDLE;
-            state.count = state.count + 1;
-            console.log(state.data);
-            
         })
-        .addCase(addItemToCartDetails.rejected, (state, action) => {
+        .addCase(cartDatabaseToLocalStorageDetails.rejected, (state, action) => {
             state.status = StatusCode.ERROR;
         })
     }
 });
 
-export const { addProductInCart, removeProductInCart, increaseProductQuantity, decreaseProductQuantity } = addItemToCartSlice.actions; 
+export const { addProductInCart, removeProductInCart, increaseProductQuantity, decreaseProductQuantity, resetAddItemToCart,
+    addCartProductsToLocalStorage, emptyLocalStorageCartItemsAfterPaymentDone } = addItemToCartSlice.actions; 
 export default addItemToCartSlice.reducer;
 
-export const addItemToCartDetails = createAsyncThunk('addItemToCart/post', async ({id, quantity}) => {
-    try {
-        const link = `/api/v2/product/${id}`;
-        console.log(link);
-        const request = await axios.get(link);
-        const response = await request.data.data;
+// export const addItemToCartDetails = createAsyncThunk('addItemToCart/post', async () => {
+//     return "data";
+// });
 
-        console.log("res", response);
+export const cartDatabaseToLocalStorageDetails = createAsyncThunk('cartDatabaseToLocalStorage/get', async () => {
+    try {
+        console.log("database to localStroage Start");
+        const request = await axios.get(`/api/v2/cart/DatabaseToLocalStorage`);
         console.log("req", request);
-        return { "data": request };
+        console.log("Order Review");
+        return { "data": request.data };
     } catch (error) {
         if (error.response) {
             console.log('Response data:', error.response.data);

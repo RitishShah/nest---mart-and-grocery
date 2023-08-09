@@ -1,9 +1,7 @@
-import React, { Fragment, useEffect } from "react";
-// import { DataGrid } from "@material-ui/data-grid";
+import React, { Fragment } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import "./AllProducts.css";
 import { useSelector, useDispatch } from "react-redux";
-// import { clearErrors, deleteProduct, getAdminProduct } from "../../actions/ProductActions";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import MetaData from "../../more/MetaData";
@@ -12,39 +10,24 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SideBar from "./Sidebar";
 import { toast } from 'react-toastify';
 import StatusCode from "../../redux/StatusCode";
-import { deleteProductDetails, resetDeleteProduct } from "../../redux/deleteProductSlice";
-// import { getAllProducts } from "../../redux/allProductsSlice";
-// import { DELETE_PRODUCT_RESET } from "../../constans/ProductConstans";
-
+import { deleteProductDetails } from "../../redux/deleteProductSlice";
 
 const AllProducts = () => {
     const history = useNavigate();
     const dispatch = useDispatch();
-    // const { error, products } = useSelector((state) => state.AllProducts);
     const { data: products, status } = useSelector(state => state.allProducts);
-    const {  isDeleted } = useSelector((state) => state.deleteProduct);
 
     const deleteProductHandler = (id) => {
-        dispatch(deleteProductDetails(id));
+        dispatch(deleteProductDetails(id)).then((response) => {
+            const keys = Object.keys(response.payload);
+            if(keys.includes("error")) {
+                toast.error(response.payload.error);
+            } else {
+                toast.success("Product Deleted Successfully");
+                history("/dashboard");
+            }
+        })
     };
-
-    useEffect(() => {
-        // if (error) {
-        // toast.error(error);
-        // // dispatch(clearErrors());
-        // }
-        // if (deleteError) {
-        //     toast.error(deleteError);
-        //     // dispatch(clearErrors());
-        // }
-    
-        if (isDeleted) {
-            toast.success("Product Deleted Successfully");
-            history("/dashboard");
-            dispatch(resetDeleteProduct());
-        }
-        // dispatch(getAllProducts());
-    }, [dispatch, isDeleted, history]);
 
     const columns = [
         { field: "id", headerName: "Product ID", minWidth: 200, flex: 0.5 },
@@ -67,16 +50,16 @@ const AllProducts = () => {
         },
     ];
 
-  const rows = [];
+    const rows = [];
 
-  products && 
-  products.forEach((item) => {
-    rows.push({
-        id: item._id,
-        stock: item.stock,
-        price: item.price,
-        name: item.name,
-      });
+    products && 
+    products.forEach((item) => {
+        rows.push({
+            id: item._id,
+            stock: item.stock,
+            price: item.price,
+            name: item.name,
+        });
     });
 
     if(status === StatusCode.LOADING) {
@@ -98,20 +81,7 @@ const AllProducts = () => {
                     <DataGrid
                         rows={rows}
                         columns={columns}
-                        // pageSize={10}
-                        // disableSelectionOnClick
                         className="productListTable"
-                        // autoHeight
-                        // {...products}
-                        // initialState={{
-                        //   ...products.initialState,
-                        //   pagination: {
-                        //     ...products.initialState?.pagination,
-                        //     paginationModel: {
-                        //       pageSize: 10,
-                        //     },
-                        //   },
-                        // }}
                     />
                 </div>
             </div>

@@ -28,6 +28,11 @@ import updateUserRoleSlice from "./updateUserRoleSlice";
 import allReviewsProductSlice from "./allReviewsProductSlice";
 import deleteProductReviewSlice from "./deleteProductReviewSlice";
 import forgotPasswordSlice from "./forgotPasswordSlice";
+import resetPasswordSlice from "./resetPasswordSlice";
+import userOrdersSlice from "./userOrdersSlice";
+import databaseToLocalStorageSlice from "./databaseToLocalStorageSlice";
+import localStorageToDatabaseSlice from "./localStorageToDatabaseSlice";
+import favouriteLocalStorageToDatabaseSlice from "./favouriteLocalStorageToDatabaseSlice";
 
 const store = configureStore({
     reducer: {
@@ -60,6 +65,11 @@ const store = configureStore({
         allReviewsProduct: allReviewsProductSlice,
         deleteProductReview: deleteProductReviewSlice,
         forgotPassword: forgotPasswordSlice,
+        resetPassword: resetPasswordSlice,
+        userOrders: userOrdersSlice,
+        databaseToLocalStorage: databaseToLocalStorageSlice,
+        localStorageToDatabse: localStorageToDatabaseSlice,
+        favouriteLocalStorageToDatabase: favouriteLocalStorageToDatabaseSlice,
     }
 });
 

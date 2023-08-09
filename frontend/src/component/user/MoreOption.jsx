@@ -42,7 +42,6 @@ const MoreOption = () => {
           padding: "10px",
           flexDirection: "column",
           marginBottom: "10vh",
-        //   display: "none",
         }}
       >
         {isAuthenticated === false ? (

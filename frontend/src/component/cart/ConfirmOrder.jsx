@@ -52,7 +52,7 @@ const ConfirmOrder = () => {
                 </div>
                 <div>
                   <p>Phone:</p>
-                  <span>{shippingDetails.phoneNo}</span>
+                  <span>{shippingDetails.phone}</span>
                 </div>
                 <div>
                   <p>Address:</p>
@@ -88,7 +88,6 @@ const ConfirmOrder = () => {
      
             </div>
           </div>
-          {/*  */}
           <div>
             <div className="orderSummary">
               <Typography>Order Summery</Typography>
@@ -96,12 +95,12 @@ const ConfirmOrder = () => {
                 <div>
                   <p>Subtotal:</p>
                   <span>${subtotal}</span>
-                </div>
-                <div>
-                  <p>Shipping Charges:</p>
-                  <span>${shippingCharges}</span>
-                </div>
-                <div>
+                  </div>
+                    <div>
+                      <p>Shipping Charges:</p>
+                      <span>${shippingCharges}</span>
+                    </div>
+                  <div>
                 </div>
               </div>
   

@@ -1,7 +1,8 @@
-const dotenv = require('dotenv');
-dotenv.config({
-    path:"backend/config/.env"
-})
+if(process.env.NODE_ENV !== "PRODUCTION") {
+    require("dotenv").config({
+        path:"backend/config/.env"
+    });
+}
 
 // create token and saving that in cookies
 exports.sendToken = (res, token) =>{

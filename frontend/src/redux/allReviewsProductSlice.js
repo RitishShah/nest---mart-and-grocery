@@ -2,12 +2,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const productAllReviewsData = localStorage.getItem("productAllReviewsList") !== null ? JSON.parse(localStorage.getItem("productAllReviewsList")) : [];
+const isProductAllReviewsReceived = localStorage.getItem("isProductAllReviewsReceived") !== null ? JSON.parse(localStorage.getItem("isProductAllReviewsReceived")) : false;
+const currProductIdReview = localStorage.getItem("currProductIdReview") !== null ? JSON.parse(localStorage.getItem("currProductIdReview")) : null;
+
+const setCartListFunc = (productAllReviewsData, isProductAllReviewsReceived, currProductId) => {
+    localStorage.setItem("productAllReviewsList", JSON.stringify(productAllReviewsData));
+    localStorage.setItem("isProductAllReviewsReceived", JSON.stringify(isProductAllReviewsReceived));
+    localStorage.setItem("currProductId", JSON.stringify(currProductId));
+};
+
 const initialState = {
-    productReviewsData: null,
+    productReviewsData: productAllReviewsData,
     status: StatusCode.IDLE,
     error: null,
-    isProductAllReviewsFetched: false,
-    currProductId: null,
+    isProductAllReviewsFetched: isProductAllReviewsReceived,
+    currProductId: currProductIdReview,
 }
 
 const allReviewsProductSlice = createSlice({
@@ -36,6 +46,12 @@ const allReviewsProductSlice = createSlice({
                 state.currProductId = action.payload.data.productId;
                 state.isProductAllReviewsFetched = true;
                 console.log("Fetch All Reviews of a Product associated with id", action.payload.data);
+
+                setCartListFunc(
+                    state.productReviewsData.map((item) => item),
+                    state.isProductAllReviewsFetched,
+                    state.currProductId
+                );
             }
             state.status = StatusCode.IDLE;
         })

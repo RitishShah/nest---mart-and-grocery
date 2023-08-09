@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const utils = require('../utils/response');
-const dotenv = require('dotenv');
 
-dotenv.config({
-    path:"backend/config/.env"
-})
+if(process.env.NODE_ENV !== "PRODUCTION") {
+    require("dotenv").config({
+        path:"backend/config/.env"
+    });
+}
 
 module.exports = async (request, response, next) => {
     try {

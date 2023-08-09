@@ -2,10 +2,18 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const userLoginData = localStorage.getItem("userLoginData") !== null ? JSON.parse(localStorage.getItem("userLoginData")) : null;
+const isAuthenticated = localStorage.getItem("isAuthenticated") !== null ? JSON.parse(localStorage.getItem("isAuthenticated")) : false;
+
+const setLoginFunc = (userLoginData, isAuthenticated) => {
+    localStorage.setItem("userLoginData", JSON.stringify(userLoginData));
+    localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
+}
+
 const initialState = {
-    data: [],
+    data: userLoginData,
     status: StatusCode.IDLE,
-    isAuthenticated: false,
+    isAuthenticated: isAuthenticated,
     error: null
 }
 
@@ -15,14 +23,18 @@ const loginSlice = createSlice({
     // Handle synchronous operations.
     reducers: {
         login: (state) => {
-            state.data = [];
+            state.data = null;
             state.isAuthenticated = false;
             state.error = null;
+
+            setLoginFunc(state.data, state.isAuthenticated);
         },
 
         updateData: (state, action) => {
             console.log("last Step", action.payload.data);
             state.data = {"data" : action.payload};
+
+            setLoginFunc(state.data, state.isAuthenticated);
         }
     },
 
@@ -40,6 +52,8 @@ const loginSlice = createSlice({
             } else {
                 state.isAuthenticated = true;
                 state.data = action.payload;
+
+                setLoginFunc(state.data, state.isAuthenticated);
             }
             state.status = StatusCode.IDLE;
         })

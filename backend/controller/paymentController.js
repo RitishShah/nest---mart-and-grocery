@@ -1,9 +1,11 @@
 const utils = require('../utils/response');
-const dotenv = require('dotenv');
-dotenv.config({
-    path:"backend/config/.env"
-})
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+if(process.env.NODE_ENV !== "PRODUCTION") {
+    require("dotenv").config({
+        path:"backend/config/.env"
+    });
+}
 
 exports.payment = async (req, res) => {
     const myPayment = await stripe.paymentIntents.create({

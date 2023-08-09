@@ -58,7 +58,7 @@
     color: rgba(0, 0, 0, 0.623);
   }
 
-  .productReviewsContainer .productContainer {
+  .productContainer {
     display: flex;
     justify-content: center;
     align-items: center;

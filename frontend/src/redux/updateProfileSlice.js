@@ -10,7 +10,7 @@ const initialState = {
 }
 
 const updateProfileSlice = createSlice({
-    name: 'updatePassword',
+    name: 'updateProfile',
     initialState,
     // Handle synchronous operations.
     reducers: {

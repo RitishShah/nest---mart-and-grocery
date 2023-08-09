@@ -1,6 +1,5 @@
 const http = require('http');
 const app = require('./app');
-const dotenv = require('dotenv');
 const connectDatabase = require('./database/db');
 const cloudinary = require('cloudinary');
 
@@ -9,9 +8,11 @@ process.on("uncaughtException", (err) => {
     console.log(`Shutting Down Server for Handling Uncaught Exception : ${err.message}`);
 });
 
-dotenv.config({
-    path:"backend/config/.env"
-})
+if(process.env.NODE_ENV !== "PRODUCTION") {
+    require("dotenv").config({
+        path:"backend/config/.env"
+    });
+}
 
 const PORT = process.env.PORT || 4000;
 const HOST = '0.0.0.0';

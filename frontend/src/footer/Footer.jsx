@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const { isAuthenticated } = useSelector((state) => state.login);
   return (
     <div className="Footer flex space__around pz__15" style={{"borderTop":".3px solid rgba(21,21,21,0.5)"}}>
       {/* Footer 1st part */}
@@ -24,7 +26,7 @@ const Footer = () => {
             <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
           </svg>
           <strong>Address:</strong>
-          <h6>7400 Jashore Sadar,Bangladesh</h6>
+          <h6>New Delhi, India</h6>
         </div>
 
         <div className="location flex py__10">
@@ -54,7 +56,7 @@ const Footer = () => {
             <path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866.5h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 .866.5H11.5A1.5 1.5 0 0 0 13 12h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z" />
           </svg>
           <strong>Call us:</strong>
-          <h6>+8801785830142</h6>
+          <h6>+9149495919</h6>
         </div>
 
         <div className="location flex py__10">
@@ -86,33 +88,22 @@ const Footer = () => {
       <div className="mobile">
         <div className="footer__2nd__part">
              <h5>Account</h5>
-             <Link to="/login"><h3>Log In</h3></Link>
-             <Link to="/login"><h3>Sign In</h3></Link>
-             <Link to="/login"><h3>Registration</h3></Link>
-             <Link to="/password/forgot"><h3>Forgot Password</h3></Link>
+             {isAuthenticated ? <Link to="/authenticated"><h3>Log In</h3></Link> : <Link to="/login"><h3>Log In</h3></Link>}
+             {isAuthenticated ? <Link to="/authenticated"><h3>Registration</h3></Link> : <Link to="/login"><h3>Registration</h3></Link>}
+             {isAuthenticated ? <Link to="/authenticated"><h3>Forgot Password</h3></Link> : <Link to="/password/forgot"><h3>Forgot Password</h3></Link>}
         </div>
         {/* Footer 3rd part */}
         <div className="footer__2nd__part">
              <h5>Follow us</h5>
-             <Link to="/facebook.com"><h3>Facebook</h3></Link>
-             <Link to="/youtube.com"><h3>Youtube</h3></Link>
-             <Link to="/instagram.com"><h3>Instagram</h3></Link>
+             <Link to="https://www.facebook.com"><h3>Facebook</h3></Link>
+             <Link to="https://www.youtube.com"><h3>Youtube</h3></Link>
+             <Link to="https://www.instagram.com"><h3>Instagram</h3></Link>
         </div>
-      {/* Footer 4th part */}
-       <div className="footer__3rd__part">
-            <h5>Buiseness</h5>
-             <Link to="/creator"><h3>Create A Seller Account</h3></Link>
-             <Link to="/creator"><h3>Seller Rules</h3></Link>
-             <Link to="/Products"><h3>View Shop</h3></Link>
-             <Link to="/support"><h3>Report us</h3></Link>
-       </div>
-      {/* Footer 5th part */}
       <div className="footer__4th__part">
       <h5>Rules</h5>
       <Link to="/faq"><h3>FAQ</h3></Link>
-      <Link to="/contact"><h3>contact us</h3></Link>
+      <Link to="/support"><h3>contact us</h3></Link>
       <Link to="/about"><h3>About us</h3></Link>
-      <Link to="/creator"><h3>Live Chat</h3></Link>
         </div>
         </div>
     </div>

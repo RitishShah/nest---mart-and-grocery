@@ -15,16 +15,16 @@ exports.createUserValidations = (req, res, next) => {
         errorMsg.push('Email is required');
     } else {
         if(!validateEmail(bodyData.email)) {
-            errorMsg.push("Invalid Email Format!!")
+            errorMsg.push("Invalid Email Format!!");
         }
     }
 
     if (!bodyData.password) {
         errorMsg.push('password  is required')
     } else {
-        // check the password contain 8 char, 1 Letter, 1 Number, 1 Special Char,
+        // check the password contain 8 char, 1 Letter, 1 Number, 1 Special Char.
         if (!validatePassword(bodyData.password)) {
-            errorMsg.push("Minimum eight characters, at least one letter, one number and one special character")
+            errorMsg.push("Minimum eight characters, at least one letter, one number and one special character");
         }
     }
 

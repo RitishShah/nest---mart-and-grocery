@@ -1,13 +1,8 @@
 import React from 'react'
-// import { useSelector } from "react-redux";
 import { Rating } from "@material-ui/lab";
-// import StatusCode from '../../redux/StatusCode';
-// import Loading from "../../more/Loader"
 
 const ReviewCard = ({review}) => {
     // eslint-disable-next-line
-    // const { status } = useSelector((state) => state.productDetails);
-
     const options = {
         value: review.rating,
         readOnly: true,
@@ -15,20 +10,8 @@ const ReviewCard = ({review}) => {
         color:"#3BB77E"
     };
 
-    // if(status === StatusCode.LOADING) {
-    //     return <p>Loading...</p>
-    // }
-    
-    // if(status === StatusCode.ERROR) {
-    //     return <p>Something went wrong! try again later</p>
-    // }
-
     return (
        <>
-       {/* {loading ? (
-           <Loading />
-       ) :( */}
-        <>
         <div style={{
             display:"flex",
             alignItems:"center",
@@ -41,8 +24,6 @@ const ReviewCard = ({review}) => {
             <p style={{lineHeight:"1.3",fontSize:"1.2vmax"}}>{review.comment}</p>
             <Rating {...options} />
         </div>
-        </>
-       {/* )} */}
        </>
     )
 }

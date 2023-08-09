@@ -1,6 +1,6 @@
 import React from "react";
 import "./Cart.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Typography } from "@material-ui/core";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 import { Link } from "react-router-dom";
@@ -33,19 +33,14 @@ const Cart = () => {
     dispatch(decreaseProductQuantity(product));
   };
 
-  // const deleteCartItems = (id) => {
-  //   dispatch(removeItemsFromCart(id));
-  // };
-
   const checkoutHandler = () => {
-    // history("/login?redirect=shipping");
     history("/shipping")
   };
 
   return (
     <>
       <MetaData title={"Cart"}/>
-      {cartItems.length === 0 ? (
+      {!cartItems || (cartItems && cartItems.length === 0) ? (
         <div className="emptyCart">
           <RemoveShoppingCartIcon />
           <Typography>No Items In Cart</Typography>
@@ -66,25 +61,11 @@ const Cart = () => {
                 <div className="cartContainer" key={item._id}>
                   <CartItemCard item={item}/>
                   <div className="cartInput">
-                    <button
-                      onClick={() =>
-                        decreaseQuantity(item)
-                      }
-                    >
-                      -
-                    </button>
+                    <button onClick={() => decreaseQuantity(item)}>-</button>
                     <input type="number" readOnly value={item.quantity} />
-                    <button
-                      onClick={() =>
-                        increaseQuantity(item)
-                      }
-                    >
-                      +
-                    </button>
+                    <button onClick={() => increaseQuantity(item)}>+</button>
                   </div>
-                  <p className="cartSubtotal">{`$${
-                    item.price * item.quantity
-                  }`}</p>
+                  <p className="cartSubtotal">{`$${item.price * item.quantity}`}</p>
                 </div>
               ))}
 

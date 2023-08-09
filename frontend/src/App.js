@@ -35,33 +35,12 @@ import UpdateUser from './component/Admin/UpdateUser';
 import AllReviews from './component/Admin/AllReviews';
 import SingleProductReview from './component/Admin/SingleProductReview';
 import ForgotPassword from './component/user/ForgotPassword';
-// import { useDispatch } from 'react-redux';
-// import { getUserMyselfDetails } from './redux/userDetailsMyselfSlice';
-// import { useSelector } from 'react-redux';
-// import UserData from './more/UserData';
-
-
+import ResetPassword from './component/user/ResetPassword';
+import NotFound from './more/NotFound';
+import UserOrders from './component/user/UserOrders';
+import AlreadyLoggedIn from './footer/AlreadyLoggedIn';
 
 function App() {
-  // const router = createBrowserRouter(createRoutesFromElements(
-  //   <Routes>
-  //     <Route path="/" element={<RootLayout/>}>
-  //       <Route index element={<Home/>}/>
-  //       <Route path="/product/:id" element={<ProductDetails/>} />
-  //     </Route>
-  //     <Route path="/login" element={<LoginSignup/>} />
-  //   </Routes>
-  // ))
-
-  // const { isAuthenticated, data:user } = useSelector((state) => state.login);
-
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(getUserMyselfDetails());
-  //   console.log("APP Level Reached");
-  // }, [dispatch]);
-
   const [stripeApiKey, setStripeApiKey] = useState("");
 
   async function getStripeApiKey() {
@@ -76,10 +55,6 @@ function App() {
 
 
   return (
-    // <div className="App">
-    //   <RouterProvider router={router} />
-    // </div>
-
     <div className="App">
       <BrowserRouter>
         <Routes>
@@ -124,23 +99,10 @@ function App() {
           <Route path="/me/profile/update" element={<ProtectedRoute />}>
             <Route index element={<EditProfile />} />
           </Route>
-          {/* <Route path="/shipping" element={<ProtectedRoute />}>
-            <Route index element={<Shipping />} />
-          </Route>
-          <Route path="/order/confirm" element={<ProtectedRoute />}>
-            <Route index element={<ConfirmOrder />} />
-          </Route> */}
-          {/* <Route path="/shipping" element={<Shipping/>}/> */}
-          {/* <Route path="/order/confirm" element={<ConfirmOrder/>}/> */}
 
-          {/* {stripeApiKey && (
-            <Route path="/process/payment" element={<ProtectedRoute />}>
-                <Route index element={<Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>} />
-            </Route>
-          )}
-          <Route path="/order/success" element={<ProtectedRoute />}>
-            <Route index element={<OrderSuccess />} />
-          </Route> */}
+          <Route path="/me/orders" element={<ProtectedRoute />}>
+              <Route index element={<UserOrders />} />
+          </Route>
 
           <Route path="/login" element={<LoginLAyout/>}/>
           <Route path="/search" element={<Search/>}/>
@@ -189,8 +151,13 @@ function App() {
           </Route>
 
           <Route path="/password/forgot" element={<ForgotPassword/>}/>
-          <Route path="/password/reset/:token" element={<ForgotPassword/>}/>
-          
+          <Route path="/password/reset/:token" element={<ResetPassword/>}/>
+
+          <Route path="/authenticated" element={<ProtectedRoute />}>
+            <Route index element={<AlreadyLoggedIn />} />
+          </Route>
+
+          <Route path="*" element={<NotFound/>}/>
         </Routes>
       </BrowserRouter>
     </div>

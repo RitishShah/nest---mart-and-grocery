@@ -20,6 +20,8 @@ import { toast } from 'react-toastify';
 import { orderCreateDetails } from "../../redux/orderCreateSlice";
 import { useNavigate } from "react-router-dom";
 import StatusCode from "../../redux/StatusCode";
+import { userOrdersDetails } from "../../redux/userOrdersSlice";
+import { emptyLocalStorageCartItemsAfterPaymentDone, resetAddItemToCart } from "../../redux/addItemToCartSlice";
 // import 'react-toastify/dist/ReactToastify.css';
 // import Loading from "../../more/Loader";
 
@@ -102,8 +104,18 @@ const Payment = () => {
           };
 
           console.log("orderDetails", order);
-          dispatch(orderCreateDetails(order));
-          history("/order/success");
+          dispatch(orderCreateDetails(order)).then((response) => {
+            const keys = Object.keys(response.payload);
+            if(keys.includes("error")) {
+              toast.error(response.payload);
+            } else {
+              toast.success("Order Created Successfully");
+              dispatch(userOrdersDetails());
+              dispatch(emptyLocalStorageCartItemsAfterPaymentDone());
+              dispatch(resetAddItemToCart());
+              history("/order/success");
+            }
+          })
         } else {
           toast.error("There's some issue while processing payment");
         }
@@ -117,7 +129,6 @@ const Payment = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      // dispatch(clearErrors());
     }
   }, [error]);
 
@@ -130,9 +141,7 @@ const Payment = () => {
   }
 
   return (
-   <>
-   (
-    <>
+  <>
     <MetaData title="Payment" />
     <CheckoutSteps activeStep={2} />
     <div className="paymentContainer">
@@ -160,8 +169,6 @@ const Payment = () => {
       </form>
     </div>
   </>
-   )
-   </>
   );
 };
 

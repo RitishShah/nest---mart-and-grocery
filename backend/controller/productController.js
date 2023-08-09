@@ -8,35 +8,6 @@ exports.createProduct = async(req,res,next) => {
   let images = req.body.images;
 
   console.log("Create product images url", req.body.images);
-  // console.log(typeof req.body.images[0].url);
-
-  // if(req.body.images) {
-  //   if (req.body.images.length === 1 && typeof req.body.images[0].public_id === "string" && typeof req.body.images[0].url === "string") {
-  //     console.log("as");
-  //     images.push(req.body.images[0]);
-  //     console.log("asasa");
-  //   } else {
-  //     images = req.body.images;
-  //   }
-  // }
-
-  // if (typeof req.body.images === "object") {
-  //   images.push(req.body.images);
-  // } else {
-  //   images = req.body.images;
-  // }
-
-  // if (typeof req.body.images === "string") {
-  //   images.push(req.body.images);
-  // } else {
-  //   if (Array.isArray(req.body.images)) {
-  //     images = req.body.images;
-  //   } else {
-  //     // Handle the case when req.body.images is neither a string nor an array
-  //     // You can log an error, throw an exception, or handle it based on your requirements.
-  //     console.log(req.body.images);
-  //   }
-  // }
 
   const imagesLinks = [];
 

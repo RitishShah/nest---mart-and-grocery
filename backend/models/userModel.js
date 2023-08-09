@@ -4,9 +4,6 @@ const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
-        required: [true, "Please your Name"],
-        minlength: [3, "Please enter a name atleast 3 characters"],
-        maxlength: [15, "Name can not big than 15 characters"],
     },
     email: {
         type: String,
@@ -15,8 +12,6 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "Please enter your password!"],
-        minlength: [8, "Password should be greater than 8 characters"],
         // select: false,
     },
     avatar: {

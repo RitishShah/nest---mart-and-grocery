@@ -4,7 +4,6 @@ import StatusCode from './StatusCode';
 
 const initialState = {
     status: StatusCode.IDLE,
-    orderData: null,
     error: null
 }
 
@@ -31,7 +30,6 @@ const orderCreateSlice = createSlice({
                 state.error = action.payload.error.message;
             } else {
                 console.log("orderCreate", action.payload.data);
-                state.orderData = action.payload.data;
             }
             state.status = StatusCode.IDLE;
         })

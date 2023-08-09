@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import { Outlet, useNavigate } from "react-router-dom";
-// import Footer from '../footer/Footer';
 
 const AdminRoute = () => {
     const { isAuthenticated, data: userData } = useSelector((state) => state.login);

@@ -2,7 +2,6 @@
 import React from "react";
 import "./BottomTab.css";
 import { Link } from "react-router-dom";
-// import { useSelector } from "react-redux";
 import HomeIcon from "@material-ui/icons/Home";
 import SearchIcon from '@material-ui/icons/Search';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
@@ -15,8 +14,6 @@ const BottomTab = () => {
     const { isAuthenticated} = useSelector((state) => state.login);
     const { totalQuantity: cartItemsCount } = useSelector((state) => state.addItemToCart);
     const { totalQuantity: favouriteItemsCount } = useSelector((state) => state.addItemToFavourite);
-    // const { cartItems } = useSelector((state) => state.cart);
-    // const { favouriteItems } = useSelector((state) => state.favourite);
 
     return (
     <>

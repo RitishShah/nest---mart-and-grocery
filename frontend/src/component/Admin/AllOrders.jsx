@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import "./CreateProduct.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,11 +8,9 @@ import MetaData from "../../more/MetaData";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SideBar from "./Sidebar";
-// import { getAllOrders, clearErrors, deleteOrder } from "../../actions/OrderAction";
-// import { DELETE_ORDER_RESET } from "../../constans/OrderConstans";
 import { toast } from 'react-toastify';
 import { getAllOrders } from "../../redux/allOrdersSlice";
-import { deleteOrderDetails, resetDeleteOrder } from "../../redux/deleteOrderSlice";
+import { deleteOrderDetails } from "../../redux/deleteOrderSlice";
 import { singleOrderDetails } from "../../redux/singleOrderDetailSlice";
 
 
@@ -20,40 +18,24 @@ const AllOrders = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
 
-//   const { error, orders } = useSelector((state) => state.AllOrders);
-  const { allOrdersData: orders, isAllOrdersReceived } = useSelector((state) => state.allOrders);
-  const { isOrderDeleted } = useSelector((state) => state.deleteOrder);
+  const { allOrdersData: orders } = useSelector((state) => state.allOrders);
 
   const deleteOrderHandler = (id) => {
-    dispatch(deleteOrderDetails(id));
+    dispatch(deleteOrderDetails(id)).then((response) => {
+      const keys = Object.keys(response.payload);
+      if(keys.includes("error")) {
+        toast.error(response.payload.error);
+      } else {
+        toast.success("Order Deleted Successfully");
+        history("/admin/orders");
+        dispatch(getAllOrders());
+      }
+    })
   };
 
   const callSingleOrderDetails = (id) => {
     dispatch(singleOrderDetails(id));
   }
-
-  useEffect(() => {
-    // if (error) {
-    //   toast.error(error);
-    //   dispatch(clearErrors());
-    // }
-
-    // if (deleteError) {
-    //   toast.error(deleteError);
-    //   dispatch(clearErrors());
-    // }
-
-    if(!isAllOrdersReceived) {
-      dispatch(getAllOrders());
-    }
-
-    if (isOrderDeleted) {
-      toast.success("Order Deleted Successfully");
-      history("/admin/orders");
-      dispatch(getAllOrders());
-      dispatch(resetDeleteOrder());
-    }
-  }, [dispatch, history, isOrderDeleted, orders, isAllOrdersReceived]);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 300, flex: 1 },

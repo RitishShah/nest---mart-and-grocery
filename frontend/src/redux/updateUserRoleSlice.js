@@ -3,8 +3,6 @@ import axios from "axios";
 import StatusCode from './StatusCode';
 
 const initialState = {
-    userRoleUpdatedData: null,
-    isRoleUpdated: false,
     status: StatusCode.IDLE,
     error: null
 }
@@ -14,11 +12,7 @@ const updateUserRoleSlice = createSlice({
     initialState,
     // Handle synchronous operations.
     reducers: {
-        resetUpdatedRole: (state) => {
-            state.userRoleUpdatedData = null;
-            state.isRoleUpdated = false;
-            state.error = null;
-        }
+
     },
 
     // Handle asynchronous operations.
@@ -34,8 +28,7 @@ const updateUserRoleSlice = createSlice({
                 console.log(action.payload.error);
                 state.error = action.payload.error;
             } else {
-                state.isRoleUpdated = true;
-                state.userRoleUpdatedData = action.payload;
+                console.log(action.payload);
             }
             state.status = StatusCode.IDLE;
         })
@@ -45,7 +38,7 @@ const updateUserRoleSlice = createSlice({
     }
 });
 
-export const { resetUpdatedRole } = updateUserRoleSlice.actions;
+// export const { resetUpdatedRole } = updateUserRoleSlice.actions;
 export default updateUserRoleSlice.reducer;
 
 export const updateUserRoleDetails = createAsyncThunk('userRoleUpdated/put', async({ role, email, name, id }) => {

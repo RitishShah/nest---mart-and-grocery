@@ -2,10 +2,18 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const filteredProductsData = localStorage.getItem("filteredProductsList") !== null ? JSON.parse(localStorage.getItem("filteredProductsList")) : [];
+const totalProducts = localStorage.getItem("totalProducts") !== null ? JSON.parse(localStorage.getItem("totalProducts")) : 0;
+
+const setCartListFunc = (filteredProductsData, totalFilteredProducts) => {
+    localStorage.setItem("filteredProductsList", JSON.stringify(filteredProductsData));
+    localStorage.setItem("totalProducts", JSON.stringify(totalFilteredProducts));
+};
+
 const initialState = {
-    data: [],
+    data: filteredProductsData,
     status: StatusCode.IDLE,
-    totalProducts: 0,
+    totalProducts: totalProducts,
     resultPerPage: 8
 }
 
@@ -28,6 +36,11 @@ const productSlice = createSlice({
             state.status = StatusCode.IDLE;
             state.totalProducts = action.payload.data.data.data.totalProducts;
             console.log(state.data);
+
+            setCartListFunc(
+                state.data.map((item) => item),
+                state.totalProducts,
+            );
         })
         .addCase(getProducts.rejected, (state, action) => {
             state.status = StatusCode.ERROR;

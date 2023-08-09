@@ -3,10 +3,8 @@ import axios from "axios";
 import StatusCode from './StatusCode';
 
 const initialState = {
-    data: [],
     status: StatusCode.IDLE,
     error: null,
-    isAuthenticated: false
 }
 
 const registerSlice = createSlice({
@@ -29,7 +27,7 @@ const registerSlice = createSlice({
                 console.log("error Register", action.payload.error);
                 state.error = action.payload.error;
             } else {
-                state.isAuthenticated = true;
+                console.log(action.payload);
             }
             state.status = StatusCode.IDLE;
         })

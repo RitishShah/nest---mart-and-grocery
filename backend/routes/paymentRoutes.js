@@ -5,6 +5,6 @@ const { payment, sendStripeApiKey } = require('../controller/paymentController')
 const { paymentValidation, sendStripeApiKeyValidation } = require('../validator/PaymentValidation');
 
 router.post('/payment/process', checkAuth, paymentValidation, payment);
-router.get('/stripe-api-key', checkAuth, sendStripeApiKeyValidation, sendStripeApiKey);
+router.get('/stripe-api-key', sendStripeApiKeyValidation, sendStripeApiKey);
 
 module.exports = router;

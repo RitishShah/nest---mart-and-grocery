@@ -7,7 +7,7 @@ const { createOrderValidation, getSingleOrderValidation, getAllOrdersValidation,
 updateOrderAdminValidation, deleteOrderAdminValidation } = require('../validator/orderValidation');
 
 router.post('/order/new', checkAuth, createOrderValidation, createOrder); // It will create an order.
-router.get('/order/:id', checkAuth, getSingleOrderValidation, getSingleOrder); // It will find Single Order associated with id.
+router.get('/order/:id', checkAuth, authorizedRoles('admin'), getSingleOrderValidation, getSingleOrder); // It will find Single Order associated with id.
 router.get('/orders/me', checkAuth, getAllOrdersValidation, getAllOrders) // It will find all orders of myself.
 router.get('/admin/orders', checkAuth, authorizedRoles('admin'), getAllOrdersAdminValidation, getAllOrdersAdmin); // It will find all orders of db.
 router.put('/admin/order/:id', checkAuth, authorizedRoles('admin'), updateOrderAdminValidation, updateOrderAdmin); // It will update status of delivery.

@@ -4,9 +4,7 @@ import StatusCode from './StatusCode';
 
 const initialState = {
     status: StatusCode.IDLE,
-    updatedOrderData: null,
     error: null,
-    isOrderUpdated: false,
 }
 
 const updateOrderSlice = createSlice({
@@ -14,10 +12,8 @@ const updateOrderSlice = createSlice({
     initialState,
     // Handle synchronous operations.
     reducers: {
-        resetUpdateOrder: (state) => {
-            state.updatedOrderData =  null;
+        clearUpdateOrderError: (state) => {
             state.error = null;
-            state.isOrderUpdated = false;
         }
     },
 
@@ -34,9 +30,7 @@ const updateOrderSlice = createSlice({
                 console.log("error Report", action.payload);
                 state.error = action.payload.error.message;
             } else {
-                console.log(action.payload.data);
-                state.updatedOrderData = action.payload.data.data;
-                state.isOrderUpdated = true;
+                console.log(action.payload.data.data);
             }
 
             state.status = StatusCode.IDLE;
@@ -47,7 +41,7 @@ const updateOrderSlice = createSlice({
     }
 });
 
-export const { resetUpdateOrder } = updateOrderSlice.actions;
+export const { clearUpdateOrderError } = updateOrderSlice.actions;
 export default updateOrderSlice.reducer;
 
 export const updateOrderDetails = createAsyncThunk('updateOrder/put', async ({id, data}) => {

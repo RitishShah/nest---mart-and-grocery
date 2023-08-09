@@ -2,9 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const singleUserDetail = localStorage.getItem("singleUserDetail") !== null ? JSON.parse(localStorage.getItem("singleUserDetail")) : null;
+
+const setCartFunc = (singleUserDetail) => {
+    localStorage.setItem("singleUserDetail", JSON.stringify(singleUserDetail));
+}
+
 const initialState = {
     status: StatusCode.IDLE,
-    singleUserData: null,
+    singleUserData: singleUserDetail,
     error: null,
 }
 
@@ -18,6 +24,9 @@ const singleUserDetailSlice = createSlice({
         //     state.error = null;
         //     state.isOrderDeleted = false;
         // }
+        clearSingleUserDetailError: (state) => {
+            state.error = null
+        }
     },
 
     // Handle asynchronous operations.
@@ -35,6 +44,8 @@ const singleUserDetailSlice = createSlice({
             } else {
                 console.log(action.payload.data);
                 state.singleUserData = action.payload.data.data;
+
+                setCartFunc(state.singleUserData);
             }
 
             state.status = StatusCode.IDLE;
@@ -45,7 +56,7 @@ const singleUserDetailSlice = createSlice({
     }
 });
 
-// export const { resetDeleteOrder } = deleteOrderSlice.actions;
+export const { clearSingleUserDetailError } = singleUserDetailSlice.actions;
 export default singleUserDetailSlice.reducer;
 
 export const singleUserDetails = createAsyncThunk('singleUserDetail/get', async (id) => {

@@ -4,9 +4,7 @@ import StatusCode from './StatusCode';
 
 const initialState = {
     status: StatusCode.IDLE,
-    deletedProductReviewData: null,
     error: null,
-    isProductReviewDeleted: false,
 }
 
 const deleteProductReviewSlice = createSlice({
@@ -14,10 +12,13 @@ const deleteProductReviewSlice = createSlice({
     initialState,
     // Handle synchronous operations.
     reducers: {
-        resetDeleteProductReview: (state) => {
-            state.deletedProductReviewData =  null;
-            state.error = null;
-            state.isProductReviewDeleted = false;
+        // resetDeleteProductReview: (state) => {
+        //     state.deletedProductReviewData =  null;
+        //     state.error = null;
+        //     state.isProductReviewDeleted = false;
+        // }
+        resetErrorDeleteProductReview: (state) => {
+            state.error = null
         }
     },
 
@@ -35,8 +36,6 @@ const deleteProductReviewSlice = createSlice({
                 state.error = action.payload.error.message;
             } else {
                 console.log(action.payload.data);
-                state.deletedProductReviewData = action.payload.data.data;
-                state.isProductReviewDeleted = true;
             }
 
             state.status = StatusCode.IDLE;
@@ -47,7 +46,7 @@ const deleteProductReviewSlice = createSlice({
     }
 });
 
-export const { resetDeleteProductReview } = deleteProductReviewSlice.actions;
+export const { resetErrorDeleteProductReview } = deleteProductReviewSlice.actions;
 export default deleteProductReviewSlice.reducer;
 
 export const deleteProductReviewDetails = createAsyncThunk('deleteProductReview/delete', async ({ productId, reviewId }) => {

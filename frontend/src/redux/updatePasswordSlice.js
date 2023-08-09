@@ -3,8 +3,6 @@ import axios from "axios";
 import StatusCode from './StatusCode';
 
 const initialState = {
-    data: [],
-    update: false,
     status: StatusCode.IDLE,
     error: null
 }
@@ -29,8 +27,7 @@ const updatePasswordSlice = createSlice({
                 console.log(action.payload.error);
                 state.error = action.payload.error;
             } else {
-                state.update = true;
-                state.data = action.payload;
+                console.log(action.payload);
             }
             state.status = StatusCode.IDLE;
         })

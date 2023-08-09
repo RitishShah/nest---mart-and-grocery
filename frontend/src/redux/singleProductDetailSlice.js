@@ -2,12 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "axios";
 import StatusCode from './StatusCode';
 
+const singleProductDetail = localStorage.getItem("singleProductDetail") !== null ? JSON.parse(localStorage.getItem("singleProductDetail")) : null;
+const currProductIdEdit = localStorage.getItem("currProductIdEdit") !== null ? JSON.parse(localStorage.getItem("currProductIdEdit")) : null;
+
+const setCartListFunc = (singleProductData, currProductId) => {
+    localStorage.setItem("singleProductDetail", JSON.stringify(singleProductData));
+    localStorage.setItem("currProductIdEdit", JSON.stringify(currProductId));
+};
+
 const initialState = {
-    data: null,
+    data: singleProductDetail,
     status: StatusCode.IDLE,
     error: null,
-    isProductFetched: false,
-    currProductId: null,
+    currProductId: currProductIdEdit,
 }
 
 const singleProductDetailSlice = createSlice({
@@ -22,7 +29,6 @@ const singleProductDetailSlice = createSlice({
             state.data = null;
             state.status = StatusCode.IDLE;
             state.error = null;
-            state.isProductFetched = false;
             state.currProductId = null;
         }
     },
@@ -44,6 +50,8 @@ const singleProductDetailSlice = createSlice({
                 state.data = action.payload.data.data.product;
                 state.isProductFetched = true;
                 state.currProductId = action.payload.data.data.productId;
+
+                setCartListFunc(state.data, state.currProductId);
             }
 
             state.status = StatusCode.IDLE;

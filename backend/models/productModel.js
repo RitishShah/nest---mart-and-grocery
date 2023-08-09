@@ -3,23 +3,15 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
     name: {
         type:String,
-        required:[true, "Please enter a name for product"],
-        trim:true,
-        maxlength:[20, "Product name can't exceeds 20 chars"]
     },
     description: {
         type:String,
-        required:[true, "Please add a description for your product"],
-        maxlength:[4000, "Description can't exceeds 4000 characters"],
     },
     price: {
         type:Number,
-        required:[true, "Please add a price for your product"],
-        maxlength:[8, "Price can't exceeds 8 characters"]
     },
-    discountPrice: {
+    offerPrice: {
         type:String,
-        maxlength:[4, "Discount Price can't exceeds 4 characters"]
     },
     color: {
         type:String
@@ -45,12 +37,9 @@ const productSchema = new mongoose.Schema({
     ],
     category: {
         type:String,
-        required:[true, "Please add a category for your product"]
     },
     stock: {
         type:Number,
-        required:[true, "Please add a stock for your product"],
-        maxlength:[3, "Stock can't exceeds 3 characters"]
     },
     numOfReviews: {
         type:Number,

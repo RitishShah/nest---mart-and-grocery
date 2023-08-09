@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel');
 const nodeMailer = require("nodemailer");
-const dotenv = require('dotenv');
 const { validateEmail } = require('../utils/helper');
 const utils = require('../utils/response');
 
-dotenv.config({
-    path:"backend/config/.env"
-})
+if(process.env.NODE_ENV !== "PRODUCTION") {
+    require("dotenv").config({
+        path:"backend/config/.env"
+    });
+}
 
 router.post('/report', async (req, res) => {
     const bodyData = req.body;

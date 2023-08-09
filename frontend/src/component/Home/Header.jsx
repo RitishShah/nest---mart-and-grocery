@@ -108,10 +108,10 @@ const Header = () => {
     {/* Header Navbar */}
     <div className="navbar flex pz__10 space__beetween" ref={switcherTab}>
       <div
-       className="navigation"
-       style={{
-         padding:"0px 50px"
-       }}
+      className="navigation"
+      style={{
+        padding:"0px 50px"
+      }}
       >
         <ul
           style={{
@@ -133,14 +133,8 @@ const Header = () => {
           <Link to="/products">
             <li>Products</li>
           </Link>
-          <Link to="/creator">
-            <li>Become A Seller</li>
-          </Link>
-          <Link to="/faq">
-            <li>Users Rules</li>
-          </Link>
-          <Link to="/contact">
-            <li>Contact</li>
+          <Link to="/support">
+            <li>Report Us</li>
           </Link>
         </ul>
       </div>
@@ -253,7 +247,6 @@ const Header = () => {
       </div>
     </div>
   </div>
-   
   );
 };
 

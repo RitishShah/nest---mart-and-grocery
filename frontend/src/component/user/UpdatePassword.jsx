@@ -14,9 +14,8 @@ import { toast } from "react-toastify";
 
 const UpdatePassword = () => {
 
-const dispatch = useDispatch();
-const history = useNavigate();
-  // const alert = useAlert();
+  const dispatch = useDispatch();
+  const history = useNavigate();
 
   const { status } = useSelector((state) => state.updatePassword);
 
@@ -27,22 +26,13 @@ const history = useNavigate();
   const updatePasswordSubmit = (e) => {
     e.preventDefault();
 
-    // const myForm = new FormData();
-
-    // myForm.set("oldPassword", oldPassword);
-    // myForm.set("newPassword", newPassword);
-    // myForm.set("confirmPassword", confirmPassword);
-
     dispatch(updatePasswordDetails({ oldPassword: oldPassword, newPassword: newPassword, confirmPassword: confirmPassword })).then((response) => {
       // Redirect to home page on successful login
       console.log(response.payload);
       const keys = Object.keys(response.payload);
       if(keys.includes("error")) {
-          console.log("payload", response);
-          toast.error(response.payload.error, {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 5000,
-          });
+        console.log("payload", response);
+        toast.error(response.payload.error.message[0]);
       }
       else {
         toast.success("Password Updated Successfully");
@@ -56,17 +46,6 @@ const history = useNavigate();
     });
   };
 
-  // useEffect(() => {
-  //   if (error) {
-  //     toast(error);
-  //   }
-
-  //   if (update) {
-  //     toast.success("Profile Updated Successfully");
-  //     history("/me");
-  //   }
-  // }, [dispatch, error, toast, history, update]);
-
   if(status === StatusCode.LOADING) {
     return <p>Loading...</p>
   }
@@ -77,57 +56,54 @@ const history = useNavigate();
 
   return (
     <>
-        <>
-          <MetaData title="Change Password" />
-          <div className="updatePasswordContainer">
-            <div className="updatePasswordBox">
-              <h2 className="updatePasswordHeading">Update Profile</h2>
+      <MetaData title="Change Password" />
+      <div className="updatePasswordContainer">
+        <div className="updatePasswordBox">
+          <h2 className="updatePasswordHeading">Update Profile</h2>
 
-              <form
-                className="updatePasswordForm"
-                onSubmit={updatePasswordSubmit}
-              >
-                <div className="loginPassword">
-                  <VpnKeyIcon />
-                  <input
-                    type="password"
-                    placeholder="Old Password"
-                    required
-                    value={oldPassword}
-                    onChange={(e) => setOldPassword(e.target.value)}
-                  />
-                </div>
-
-                <div className="loginPassword">
-                  <LockOpenIcon />
-                  <input
-                    type="password"
-                    placeholder="New Password"
-                    required
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                </div>
-                <div className="loginPassword">
-                  <LockIcon />
-                  <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                </div>
-                <input
-                  type="submit"
-                  value="Change"
-                  className="updatePasswordBtn"
-                />
-              </form>
+          <form
+            className="updatePasswordForm"
+            onSubmit={updatePasswordSubmit}
+          >
+            <div className="loginPassword">
+              <VpnKeyIcon />
+              <input
+                type="password"
+                placeholder="Old Password"
+                required
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
             </div>
-          </div>
-        </>
-      {/* <BottomTab /> */}
+
+            <div className="loginPassword">
+              <LockOpenIcon />
+              <input
+                type="password"
+                placeholder="New Password"
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="loginPassword">
+              <LockIcon />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+            <input
+              type="submit"
+              value="Change"
+              className="updatePasswordBtn"
+            />
+          </form>
+        </div>
+      </div>
     </>
   );
 };
